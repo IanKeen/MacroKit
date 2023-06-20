@@ -12,5 +12,8 @@ struct MacroKitPlugin: CompilerPlugin {
         StaticMemberIterableMacro.self,
         GenerateMockMacro.self,
         DefaultMacro.self,
+        UnkeyedCodableMacro.self,
+        UnkeyedDecodableMacro.self,
+        UnkeyedEncodableMacro.self,
     ]
 }
