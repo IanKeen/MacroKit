@@ -25,9 +25,11 @@ final class DefaultMacroTests: XCTestCase {
                         _value.wrappedValue = newValue
                     }
                 }
+
                 private enum _valueDefault: DefaultValue {
                     static var value = true
                 }
+
                 private var _value: Default<_valueDefault>
             }
             """#,

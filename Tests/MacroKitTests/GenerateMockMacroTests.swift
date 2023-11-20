@@ -27,7 +27,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -44,6 +46,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     }
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -65,7 +68,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -79,6 +84,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     }
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -100,7 +106,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -114,6 +122,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     }
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -135,7 +144,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -149,6 +160,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     }
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -171,7 +183,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -188,6 +202,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     }
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -210,7 +225,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -227,6 +244,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     }
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -248,7 +266,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -265,6 +285,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     }
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -286,7 +307,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -303,6 +326,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     }
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -325,7 +349,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -342,6 +368,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     }
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -363,7 +390,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -380,6 +409,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     }
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -400,7 +430,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -412,6 +444,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     return mocks.function.execute(())
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -431,7 +464,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -443,6 +478,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     return mocks.function.execute(())
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -462,7 +498,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -474,6 +512,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     return mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -493,7 +532,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -505,6 +546,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     return mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -525,7 +567,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -537,6 +581,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     return mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -556,7 +601,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -568,6 +615,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     return mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -588,7 +636,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -600,6 +650,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     return mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -619,7 +670,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -631,6 +684,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     return mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -651,7 +705,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -663,6 +719,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     return try mocks.function.execute(())
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -682,7 +739,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -694,6 +753,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     return mocks.function.execute(())
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -713,7 +773,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -725,6 +787,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     return try mocks.function.execute(())
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -744,7 +807,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -756,6 +821,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     return try mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -776,7 +842,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -788,6 +856,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     return try mocks.function.execute((arg0))
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -812,7 +881,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock<Value>: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -829,6 +900,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     }
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -852,7 +924,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock<Value: Codable>: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -869,6 +943,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     }
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -889,7 +964,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock<Foo, Bar: Codable>: TestProtocol {
                 public let mocks = Members()
                 public class Members {
@@ -897,6 +974,7 @@ final class GenerateMockMacroTests: XCTestCase {
                 public init() {
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -919,7 +997,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol, Equatable {
                 public let mocks = Members()
                 public class Members {
@@ -936,6 +1016,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     }
                 }
             }
+
             #endif
             """,
             macros: testMacros
@@ -957,7 +1038,9 @@ final class GenerateMockMacroTests: XCTestCase {
             expandedSource: """
 
             \(proto)
+
             #if DEBUG
+
             open class TestProtocolMock: TestProtocol, Equatable, Codable {
                 public let mocks = Members()
                 public class Members {
@@ -974,6 +1057,7 @@ final class GenerateMockMacroTests: XCTestCase {
                     }
                 }
             }
+            
             #endif
             """,
             macros: testMacros

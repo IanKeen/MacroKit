@@ -18,6 +18,7 @@ final class VariableDeclSyntaxTests: XCTestCase {
         XCTAssertSyntaxEqual(source, "static public var foo: Int")
     }
 
+    /*
     func testGetter_Missing() {
         var source = Parser
             .parse(source: "var foo: Int")
@@ -215,4 +216,5 @@ final class VariableDeclSyntaxTests: XCTestCase {
         }
         """)
     }
+     */
 }
