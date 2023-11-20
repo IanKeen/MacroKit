@@ -52,8 +52,8 @@ extension DefaultMacro: AccessorMacro {
 }
 
 extension AttributeSyntax {
-    var argumentList: TupleExprElementListSyntax? {
-        switch argument {
+    var argumentList: LabeledExprListSyntax? {
+        switch arguments {
         case .argumentList(let value): return value
         default: return nil
         }
