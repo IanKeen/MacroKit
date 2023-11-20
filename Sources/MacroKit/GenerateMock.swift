@@ -1,4 +1,4 @@
-@attached(peer, names: arbitrary)
+@attached(peer, names: suffixed(Mock))
 public macro GenerateMock() = #externalMacro(module: "MacroKitMacros", type: "GenerateMockMacro")
 
 public struct MockMember<Input, Output> {

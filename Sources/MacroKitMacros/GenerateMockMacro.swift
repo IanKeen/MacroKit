@@ -107,19 +107,21 @@ private extension VariableDeclSyntax {
         var newProperty = trimmed
         var binding = newProperty.bindings.first!
         let accessor = binding.accessorBlock!.as(AccessorBlockSyntax.self)!
-        var getter = accessor.accessors.firstToken(viewMode: .sourceAccurate)!.as(AccessorDeclSyntax.self)!.trimmed
-        getter.body = CodeBlockSyntax {
-            DeclSyntax("\(raw: getter.effectSpecifiers?.throwsSpecifier != nil ? "try " : "")mocks.\(raw: newProperty.identifier.text).getter()")
-        }
 
-        var accessors: [AccessorDeclSyntax] = [getter]
+        guard
+            case var .accessors(accessors) = accessor.accessors.trimmed,
+            let getter = accessors.first
+        else { fatalError() }
+
+        accessors = []
+        accessors.append("\(raw: getter.description) { \(raw: getter.effectSpecifiers?.throwsSpecifier != nil ? "try " : "")mocks.\(raw: newProperty.identifier.text).getter() }")
         if getter.effectSpecifiers == nil {
             accessors.append("set { mocks.\(raw: identifier.text).setter(newValue) }")
         }
 
-        binding.accessorBlock = .init(accessors: .accessors(.init(accessors)))
+        binding.accessorBlock?.accessors = .accessors(accessors.trimmed)
         newProperty.accessLevel = .open
-        newProperty.bindings = newProperty.bindings.replacing(childAt: 0, with: binding)
+        newProperty.bindings[newProperty.bindings.startIndex].accessorBlock = .init(accessors: .accessors(accessors))
         return newProperty.trimmed
     }
 }
@@ -133,7 +135,7 @@ private extension FunctionDeclSyntax {
         for (x, param) in signature.parameterClause.parameters.enumerated() {
             var newParam = param
             newParam.secondName = "arg\(raw: x)"
-            newSignature.parameterClause.parameters = newSignature.parameterClause.parameters.replacing(childAt: x, with: newParam)
+            newSignature.parameterClause.parameters[newSignature.parameterClause.parameters.index(newSignature.parameterClause.parameters.startIndex, offsetBy: x)] = newParam
 
             params.append("arg\(x)")
         }
@@ -141,7 +143,7 @@ private extension FunctionDeclSyntax {
         newFunction.signature = newSignature
         newFunction.accessLevel = .open
         newFunction.body = CodeBlockSyntax {
-            DeclSyntax("return \(raw: isThrowing ? "try " : "")mocks.\(raw: name.text).execute((\(raw: params.joined(separator: ", "))))")
+            "return \(raw: isThrowing ? "try " : "")mocks.\(raw: name.text).execute((\(raw: params.joined(separator: ", "))))"
         }
         return newFunction
     }

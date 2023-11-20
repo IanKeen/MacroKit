@@ -30,11 +30,13 @@ final class UnkeyedCodableMacroTests: XCTestCase {
                 var b2: Int {
                     return b + 1
                 }
+
                 public init(from decoder: Decoder) throws {
                     var container = try decoder.unkeyedContainer()
                     self.a = try container.decode(String.self)
                     self.b = try container.decode(Int.self)
                 }
+
                 public func encode(to encoder: Encoder) throws {
                     var container = encoder.unkeyedContainer()
                     try container.encode(self.a)
