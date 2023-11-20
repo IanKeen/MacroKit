@@ -2,7 +2,7 @@ import Foundation
 
 @attached(accessor)
 @attached(peer, names: arbitrary)
-public macro Default<T: Codable>(_ value: T) -> Void = #externalMacro(module: "MacroKitMacros", type: "DefaultMacro")
+public macro Default<T: Codable>(_ value: T) = #externalMacro(module: "MacroKitMacros", type: "DefaultMacro")
 
 public protocol DefaultValue {
     associatedtype Value: Codable
