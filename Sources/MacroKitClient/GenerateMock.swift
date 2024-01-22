@@ -2,7 +2,7 @@ import Foundation
 import MacroKit
 
 // Basic
-//@GenerateMock
+@GenerateMock
 protocol DependencyA {
     var name: String { get }
 
@@ -10,7 +10,7 @@ protocol DependencyA {
 }
 
 // Inheritance
-//@GenerateMock
+@GenerateMock
 protocol DependencyB: DependencyA {
     var name: String { get }
 
@@ -18,7 +18,7 @@ protocol DependencyB: DependencyA {
 }
 
 // Associated Types
-//@GenerateMock
+@GenerateMock
 protocol DependencyC {
     associatedtype Input: DataProtocol
     associatedtype Output: Codable
