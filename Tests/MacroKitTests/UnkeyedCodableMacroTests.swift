@@ -14,7 +14,9 @@ final class UnkeyedCodableMacroTests: XCTestCase {
             @UnkeyedCodable
             public struct Foo {
                 var a: String
-                private var b: Int = 42
+                private var b: Int = 42 {
+                    didSet { }
+                }
                 var c = true
                 var b2: Int {
                     return b + 1
@@ -25,18 +27,19 @@ final class UnkeyedCodableMacroTests: XCTestCase {
             
             public struct Foo {
                 var a: String
-                private var b: Int = 42
+                private var b: Int = 42 {
+                    didSet {
+                    }
+                }
                 var c = true
                 var b2: Int {
                     return b + 1
                 }
-
                 public init(from decoder: Decoder) throws {
                     var container = try decoder.unkeyedContainer()
                     self.a = try container.decode(String.self)
                     self.b = try container.decode(Int.self)
                 }
-
                 public func encode(to encoder: Encoder) throws {
                     var container = encoder.unkeyedContainer()
                     try container.encode(self.a)
@@ -45,8 +48,8 @@ final class UnkeyedCodableMacroTests: XCTestCase {
             }
             """,
             diagnostics: [
-                .init(message: "@UnkeyedCodable requires stored properties provide explicit type annotations", line: 5, column: 5),
-                .init(message: "@UnkeyedCodable requires stored properties provide explicit type annotations", line: 5, column: 5),
+                .init(message: "@UnkeyedCodable requires stored properties provide explicit type annotations", line: 7, column: 5),
+                .init(message: "@UnkeyedCodable requires stored properties provide explicit type annotations", line: 7, column: 5),
             ],
             macros: testMacros
         )

@@ -1,7 +1,7 @@
 import Foundation
 import MacroKit
 
-@PublicInit
+//@PublicInit
 public struct Foo {
     var a: String
     private var b: Int = 42

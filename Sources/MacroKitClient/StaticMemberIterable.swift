@@ -10,8 +10,8 @@ struct Value {
     var value: String
 }
 
-func testStaticMemberIterable() {
-    for value in Value.allStaticMembers {
-        print(value.value)
-    }
-}
+//func testStaticMemberIterable() {
+//    for value in Value.allStaticMembers {
+//        print(value.value)
+//    }
+//}

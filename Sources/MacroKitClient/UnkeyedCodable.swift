@@ -1,6 +1,6 @@
 import MacroKit
 
-@UnkeyedCodable
+//@UnkeyedCodable
 public struct CodableModel {
     var a: String
     private var b: Int = 42
@@ -10,7 +10,7 @@ public struct CodableModel {
     }
 }
 
-@UnkeyedDecodable
+//@UnkeyedDecodable
 public struct DecodableModel {
     var a: String
     private var b: Int = 42
@@ -20,7 +20,7 @@ public struct DecodableModel {
     }
 }
 
-@UnkeyedEncodable
+//@UnkeyedEncodable
 public struct EncodableModel {
     var a: String
     private var b: Int = 42

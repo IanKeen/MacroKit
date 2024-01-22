@@ -1,14 +1,24 @@
 extension VariableDeclSyntax {
     public var isComputed: Bool {
         return bindings.contains { binding in
-            switch binding.accessorBlock?.accessors {
+            switch binding.accessor {
             case .none:
                 return false
 
-            case let .some(.accessors(list)):
-                return !list.allSatisfy {
-                    ["willSet", "didSet"].contains($0.accessorSpecifier.trimmed.text)
+            case .some(.accessors(let list)):
+                for accessor in list.accessors {
+                    switch accessor.accessorKind.tokenKind {
+                    case .keyword(.willSet), .keyword(.didSet):
+                        // Observers can only occur on a stored property.
+                        return false
+
+                    default:
+                        // Other accessors make it a computed property.
+                        return true
+                    }
                 }
+
+                return true
 
             case .getter:
                 return true
@@ -18,8 +28,9 @@ extension VariableDeclSyntax {
     public var isStored: Bool {
         return !isComputed
     }
+
     public var isStatic: Bool {
-        return modifiers.lazy.contains(where: { $0.name.tokenKind == .keyword(.static) }) == true
+        return modifiers?.lazy.contains(where: { $0.name.tokenKind == .keyword(.static) }) == true
     }
     public var identifier: TokenSyntax {
         return bindings.lazy.compactMap({ $0.pattern.as(IdentifierPatternSyntax.self) }).first!.identifier
@@ -33,42 +44,22 @@ extension VariableDeclSyntax {
         return bindings.lazy.compactMap(\.initializer).first?.value
     }
 
-    public var effectSpecifiers: AccessorEffectSpecifiersSyntax? {
+    public var effectSpecifiers: [AccessorEffectSpecifiersSyntax] {
         return bindings
-            .lazy
-            .compactMap(\.accessorBlock)
-            .compactMap({ accessor in
-                switch accessor.accessors {
-                case .accessors(let syntax):
-                    return syntax.lazy.compactMap(\.effectSpecifiers).first
-                case .getter:
-                    return nil
-                }
-            })
-            .first
+            .compactMap({ $0.accessor?.as(AccessorBlockSyntax.self) })
+            .flatMap({ $0.accessors })
+            .compactMap(\.effectSpecifiers)
     }
     public var isThrowing: Bool {
-        return bindings
-            .compactMap(\.accessorBlock)
-            .contains(where: { accessor in
-                switch accessor.accessors {
-                case .accessors(let syntax):
-                    return syntax.contains(where: { $0.effectSpecifiers?.throwsSpecifier != nil })
-                case .getter:
-                    return false
-                }
+        return effectSpecifiers
+            .contains(where: { effect in
+                return effect.throwsSpecifier != nil
             })
     }
     public var isAsync: Bool {
-        return bindings
-            .compactMap(\.accessorBlock)
-            .contains(where: { accessor in
-                switch accessor.accessors {
-                case .accessors(let syntax):
-                    return syntax.contains(where: { $0.effectSpecifiers?.asyncSpecifier != nil })
-                case .getter:
-                    return false
-                }
+        return effectSpecifiers
+            .contains(where: { effect in
+                return effect.asyncSpecifier != nil
             })
     }
 

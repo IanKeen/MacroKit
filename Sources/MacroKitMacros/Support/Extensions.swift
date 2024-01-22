@@ -12,20 +12,20 @@ extension DeclGroupSyntax {
     public var initializers: [InitializerDeclSyntax] {
         return memberBlock.members.compactMap({ $0.decl.as(InitializerDeclSyntax.self) })
     }
-    public var associatedTypes: [AssociatedTypeDeclSyntax] {
-        return memberBlock.members.compactMap({ $0.decl.as(AssociatedTypeDeclSyntax.self) })
+    public var associatedTypes: [AssociatedtypeDeclSyntax] {
+        return memberBlock.members.compactMap({ $0.decl.as(AssociatedtypeDeclSyntax.self) })
     }
 }
 
 extension FunctionDeclSyntax {
     public var `return`: ReturnClauseSyntax? {
-        return signature.returnClause
+        return signature.output
     }
     public var returnOrVoid: ReturnClauseSyntax {
-        return signature.returnClause ?? ReturnClauseSyntax(type: TypeSyntax("Void"))
+        return signature.output ?? ReturnClauseSyntax(returnType: TypeSyntax("Void"))
     }
     public var parameters: FunctionParameterListSyntax {
-        return signature.parameterClause.parameters
+        return signature.input.parameterList
     }
     
     public var isThrowing: Bool {

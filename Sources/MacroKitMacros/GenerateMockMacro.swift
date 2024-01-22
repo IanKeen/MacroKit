@@ -22,31 +22,31 @@ public struct GenerateMockMacro: PeerMacro {
         // Instance properties
         let mockMemberProperties = protoDecl.properties
             .map { DeclSyntax("public var \(raw: $0.identifier.text): MockMember<\(raw: $0.type!.type.trimmed), \(raw: $0.returnType)> = .init()") }
-            .compactMap { MemberBlockItemSyntax(decl: $0) }
+            .compactMap { MemberDeclListItemSyntax(decl: $0) }
 
         let properties = protoDecl.properties
             .map(\.mockProperty)
-            .compactMap { MemberBlockItemSyntax(decl: $0) }
+            .compactMap { MemberDeclListItemSyntax(decl: $0) }
 
         // Instance functions
         let mockMemberFunctions = protoDecl.functions
-            .map { DeclSyntax("public var \(raw: $0.name.text): MockMember<(\(raw: $0.parameters.typesWithoutAttribues.map(\.description).joined(separator: ", "))), \(raw: $0.returnTypeOrVoid)> = .init()") }
-            .compactMap { MemberBlockItemSyntax(decl: $0) }
+            .map { DeclSyntax("public var \(raw: $0.identifier.text): MockMember<(\(raw: $0.parameters.typesWithoutAttribues.map(\.description).joined(separator: ", "))), \(raw: $0.returnTypeOrVoid)> = .init()") }
+            .compactMap { MemberDeclListItemSyntax(decl: $0) }
 
         let functions = protoDecl.functions
             .map(\.mockFunction)
-            .compactMap { MemberBlockItemSyntax(decl: $0) }
+            .compactMap { MemberDeclListItemSyntax(decl: $0) }
 
 
         // Consolidation
-        let mockMemberMembers: MemberBlockItemListSyntax = .init(mockMemberProperties + mockMemberFunctions)
+        let mockMemberMembers: MemberDeclListSyntax = .init(mockMemberProperties + mockMemberFunctions)
 
         let mockMembers = ClassDeclSyntax(
-            modifiers: DeclModifierListSyntax {
+            modifiers: ModifierListSyntax {
                 DeclModifierSyntax(name: "public")
             },
-            name: "Members",
-            memberBlock: MemberBlockSyntax(members: mockMemberMembers)
+            identifier: "Members",
+            memberBlock: MemberDeclBlockSyntax(members: mockMemberMembers)
         )
 
         // Associatedtypes
@@ -56,18 +56,18 @@ public struct GenerateMockMacro: PeerMacro {
             let params = protoDecl.associatedTypes.enumerated().map { x, type in
                 return type.genericParameter.with(\.trailingComma, x == associatedTypes.count - 1 ? nil : .commaToken())
             }
-            genericParams = GenericParameterClauseSyntax(parameters: .init(params))
+            genericParams = GenericParameterClauseSyntax(genericParameterList: .init(params))
         }
 
         let cls = try ClassDeclSyntax(
-            modifiers: DeclModifierListSyntax {
+            modifiers: ModifierListSyntax {
                 DeclModifierSyntax(name: "open")
             },
-            name: "\(raw: protoDecl.name.text)Mock",
+            identifier: "\(raw: protoDecl.identifier.text)Mock",
             genericParameterClause: genericParams,
-            inheritanceClause: InheritanceClauseSyntax {
-                InheritedTypeSyntax(type: TypeSyntax("\(raw: protoDecl.name.text)"))
-                if let inheritance = protoDecl.inheritanceClause?.inheritedTypes {
+            inheritanceClause: TypeInheritanceClauseSyntax.init {
+                InheritedTypeSyntax(typeName: TypeSyntax("\(raw: protoDecl.identifier.text)"))
+                if let inheritance = protoDecl.inheritanceClause?.inheritedTypeCollection {
                     inheritance
                 }
             },
@@ -88,8 +88,8 @@ public struct GenerateMockMacro: PeerMacro {
                         })
                 }
 
-                MemberBlockItemListSyntax(properties)
-                MemberBlockItemListSyntax(functions)
+                MemberDeclListSyntax(properties)
+                MemberDeclListSyntax(functions)
             }
         )
 
@@ -106,22 +106,25 @@ private extension VariableDeclSyntax {
     var mockProperty: VariableDeclSyntax {
         var newProperty = trimmed
         var binding = newProperty.bindings.first!
-        let accessor = binding.accessorBlock!.as(AccessorBlockSyntax.self)!
-
-        guard
-            case var .accessors(accessors) = accessor.accessors.trimmed,
-            let getter = accessors.first
-        else { fatalError() }
+        let accessor = binding.accessor!.as(AccessorBlockSyntax.self)!
+        var accessors = accessor.accessors
+        let getter = accessors.first!
 
         accessors = []
-        accessors.append("\(raw: getter.description) { \(raw: getter.effectSpecifiers?.throwsSpecifier != nil ? "try " : "")mocks.\(raw: newProperty.identifier.text).getter() }")
+        accessors = accessors.appending("\(raw: getter.description) { \(raw: getter.effectSpecifiers?.throwsSpecifier != nil ? "try " : "")mocks.\(raw: newProperty.identifier.text).getter() }")
         if getter.effectSpecifiers == nil {
-            accessors.append("set { mocks.\(raw: identifier.text).setter(newValue) }")
+            accessors = accessors.appending("set { mocks.\(raw: identifier.text).setter(newValue) }")
         }
+        accessors = accessors.trimmed
 
-        binding.accessorBlock?.accessors = .accessors(accessors.trimmed)
+        binding.accessor = .accessors(.init(accessors: accessors))
         newProperty.accessLevel = .open
-        newProperty.bindings[newProperty.bindings.startIndex].accessorBlock = .init(accessors: .accessors(accessors))
+
+        var newAccessor = newProperty.bindings[newProperty.bindings.startIndex]
+        newAccessor.accessor = .accessors(.init(accessors: accessors))
+        var newBinding = newProperty.bindings[newProperty.bindings.startIndex]
+        newBinding.accessor = .accessors(.init(accessors: accessors))
+        newProperty.bindings = newProperty.bindings.replacing(childAt: 0, with: newBinding)
         return newProperty.trimmed
     }
 }
@@ -132,19 +135,19 @@ private extension FunctionDeclSyntax {
 
         var newSignature = signature
         var params: [String] = []
-        for (x, param) in signature.parameterClause.parameters.enumerated() {
+        for (x, param) in signature.input.parameterList.enumerated() {
             var newParam = param
             newParam.secondName = "arg\(raw: x)"
-            newSignature.parameterClause.parameters[newSignature.parameterClause.parameters.index(newSignature.parameterClause.parameters.startIndex, offsetBy: x)] = newParam
+            newSignature.input.parameterList = newSignature.input.parameterList.replacing(childAt: x, with: newParam)
 
             params.append("arg\(x)")
         }
 
         newFunction.signature = newSignature
         newFunction.accessLevel = .open
-        newFunction.body = CodeBlockSyntax {
-            "return \(raw: isThrowing ? "try " : "")mocks.\(raw: name.text).execute((\(raw: params.joined(separator: ", "))))"
-        }
+        newFunction.body = CodeBlockSyntax.init(statementsBuilder: {
+            CodeBlockItemSyntax(item: .stmt("return \(raw: isThrowing ? "try " : "")mocks.\(raw: identifier.text).execute((\(raw: params.joined(separator: ", "))))"))
+        })
         return newFunction
     }
 }
@@ -157,17 +160,17 @@ private extension VariableDeclSyntax {
 }
 private extension FunctionDeclSyntax {
     var returnTypeOrVoid: DeclSyntax {
-        if isThrowing { return "Result<\(raw: returnOrVoid.type), Error>" }
-        else { return "\(raw: returnOrVoid.type)" }
+        if isThrowing { return "Result<\(raw: returnOrVoid.returnType), Error>" }
+        else { return "\(raw: returnOrVoid.returnType)" }
     }
 }
-private extension AssociatedTypeDeclSyntax {
+private extension AssociatedtypeDeclSyntax {
     var genericParameter: GenericParameterSyntax {
-        let type = self.inheritanceClause?.inheritedTypes.first
-        
+        let type = self.inheritanceClause?.inheritedTypeCollection.first
+
         return GenericParameterSyntax(
             attributes: attributes,
-            name: name,
+            name: identifier,
             colon: type.map { _ in .colonToken() },
             inheritedType: type.map { TypeSyntax("\(raw: $0)") }
         )

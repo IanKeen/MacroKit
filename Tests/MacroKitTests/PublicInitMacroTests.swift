@@ -30,7 +30,6 @@ final class PublicInitMacroTests: XCTestCase {
                 var b2: Int {
                     return b + 1
                 }
-
                 public init(
                     a: String,
                     b: Int = 42
