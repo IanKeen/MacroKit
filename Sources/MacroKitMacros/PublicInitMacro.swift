@@ -30,6 +30,8 @@ public struct PublicInitMacro: MemberMacro {
         var included: [VariableDeclSyntax] = []
 
         for property in structDecl.storedProperties {
+            guard !property.isStatic else { continue }
+
             if property.type != nil {
                 included.append(property)
             } else {
