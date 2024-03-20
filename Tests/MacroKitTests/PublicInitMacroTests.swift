@@ -60,6 +60,30 @@ final class PublicInitMacroTests: XCTestCase {
             macros: testMacros
         )
     }
+    func testPublicInit_HappyPath_IgnoreStaticProperties() {
+        assertMacroExpansion(
+            """
+            @PublicInit
+            public struct Foo {
+                static var a: Int = 0
+                let b: Double
+            }
+            """,
+            expandedSource: """
+
+            public struct Foo {
+                static var a: Int = 0
+                let b: Double
+                public init(
+                    b: Double
+                ) {
+                    self.b = b
+                }
+            }
+            """,
+            macros: testMacros
+        )
+    }
     func testPublicInit_Failure_AccessPrivate() {
         assertMacroExpansion(
             """
