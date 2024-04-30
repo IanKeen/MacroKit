@@ -27,16 +27,12 @@ final class KeyPathIterableMacroTests: XCTestCase {
             struct Foo {
                 var a: String
                 var b: Int
-                var c: Int { 
-                    b + 1
-                }
+                var c: Int { b + 1 }
                 private var d: Bool = true
                 var e = false
-                func hello() {
-                }
-                func world() -> Int { 
-                    0
-                }
+                func hello() { }
+                func world() -> Int { 0 }
+
                 internal static var allKeyPaths: [PartialKeyPath<Foo>] {
                     return [\Foo.a, \Foo.b, \Foo.c, \Foo.e]
                 }

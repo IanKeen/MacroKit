@@ -1,36 +1,40 @@
 extension VariableDeclSyntax {
-    public var isComputed: Bool {
-        return bindings.contains { binding in
-            switch binding.accessor {
-            case .none:
-                return false
-
-            case .some(.accessors(let list)):
-                for accessor in list.accessors {
-                    switch accessor.accessorKind.tokenKind {
-                    case .keyword(.willSet), .keyword(.didSet):
-                        // Observers can only occur on a stored property.
-                        return false
-
-                    default:
-                        // Other accessors make it a computed property.
-                        return true
-                    }
+    func accessorsMatching(_ predicate: (TokenKind) -> Bool) -> [AccessorDeclSyntax] {
+        let accessors: [AccessorDeclListSyntax.Element] = bindings
+            .compactMap { patternBinding in
+                switch patternBinding.accessorBlock?.accessors {
+                case let .accessors(accessors):
+                    return accessors
+                default:
+                    return nil
                 }
+            }
+            .flatMap { $0 }
 
-                return true
+        return accessors
+            .compactMap { predicate($0.accessorSpecifier.tokenKind) ? $0 : nil }
+    }
 
-            case .getter:
-                return true
+    public var isComputed: Bool {
+        if accessorsMatching({ $0 == .keyword(.get) }).count > 0 {
+            return true
+        } else {
+            return bindings.contains { binding in
+                if case .getter = binding.accessorBlock?.accessors {
+                    return true
+                } else {
+                    return false
+                }
             }
         }
     }
+
     public var isStored: Bool {
         return !isComputed
     }
 
     public var isStatic: Bool {
-        return modifiers?.lazy.contains(where: { $0.name.tokenKind == .keyword(.static) }) == true
+        return modifiers.lazy.contains(where: { $0.name.tokenKind == .keyword(.static) }) == true
     }
     public var identifier: TokenSyntax {
         return bindings.lazy.compactMap({ $0.pattern.as(IdentifierPatternSyntax.self) }).first!.identifier
@@ -46,9 +50,16 @@ extension VariableDeclSyntax {
 
     public var effectSpecifiers: [AccessorEffectSpecifiersSyntax] {
         return bindings
-            .compactMap({ $0.accessor?.as(AccessorBlockSyntax.self) })
-            .flatMap({ $0.accessors })
-            .compactMap(\.effectSpecifiers)
+            .compactMap({ $0.accessorBlock })
+            .map(\.accessors)
+            .flatMap { accessor -> [AccessorEffectSpecifiersSyntax] in
+                switch accessor {
+                case .getter: 
+                    return []
+                case .accessors(let list):
+                    return list.compactMap(\.effectSpecifiers)
+                }
+            }
     }
     public var isThrowing: Bool {
         return effectSpecifiers

@@ -15,7 +15,7 @@ extension DefaultMacro: PeerMacro {
         guard let variable = declaration.as(VariableDeclSyntax.self) else { fatalError() }
         guard variable.isStored else { fatalError() }
         guard variable.initializerValue == nil else { fatalError() }
-        guard let value = node.argument else { fatalError() }
+        guard let value = node.arguments else { fatalError() }
 
         let defaultValue: DeclSyntax = """
         private enum _\(raw: variable.identifier)Default: DefaultValue {

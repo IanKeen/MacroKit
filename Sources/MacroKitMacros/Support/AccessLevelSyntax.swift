@@ -23,17 +23,17 @@ public enum AccessLevelModifier: String, Comparable, CaseIterable {
 }
 
 public protocol AccessLevelSyntax {
-    var modifiers: ModifierListSyntax? { get set }
+    var modifiers: DeclModifierListSyntax { get set }
 }
 
 extension AccessLevelSyntax {
     public var accessLevel: AccessLevelModifier {
-        get { return modifiers?.lazy.compactMap({ AccessLevelModifier(rawValue: $0.name.text) }).first ?? .internal }
+        get { return modifiers.lazy.compactMap({ AccessLevelModifier(rawValue: $0.name.text) }).first ?? .internal }
         set {
             let new = DeclModifierSyntax(name: .keyword(newValue.keyword))
-            var newModifiers = modifiers?.filter { AccessLevelModifier(rawValue: $0.name.text) == nil } ?? []
+            var newModifiers = modifiers.filter { AccessLevelModifier(rawValue: $0.name.text) == nil }
             newModifiers.append(new)
-            modifiers = .init(newModifiers)
+            modifiers = newModifiers
         }
     }
 }
